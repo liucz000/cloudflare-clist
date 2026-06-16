@@ -3123,21 +3123,26 @@ function FileBrowser({ storage, isAdmin, isDark, chunkSizeMB }: { storage: Stora
           {/* Batch actions */}
           {isAdmin && selectedKeys.size > 0 && (
             <>
-              <button onClick={startBatchMove} className="btn btn-sm btn-outline">
-                <ArrowRightLeft />
-                {`移动 (${selectedKeys.size})`}
+              <button onClick={startBatchMove} disabled={batchMoving} className="inline-flex items-center gap-1.5 text-xs bg-zinc-700 hover:bg-zinc-600 dark:bg-zinc-600 dark:hover:bg-zinc-500 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
+                <ArrowRightLeft className="h-3 w-3" />
+                移动
               </button>
-              <button onClick={handleBatchDownload} className="btn btn-sm btn-outline">
-                <Download />
-                {`下载 (${objects.filter((o) => !o.isDirectory && selectedKeys.has(o.key)).length})`}
+              {selectedKeys.size === 1 && (() => {
+                const obj = objects.find(o => selectedKeys.has(o.key));
+                return obj ? (
+                  <button onClick={() => startShare(obj)} className="inline-flex items-center gap-1.5 text-xs bg-zinc-700 hover:bg-zinc-600 dark:bg-zinc-600 dark:hover:bg-zinc-500 text-white px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
+                    <Share2 className="h-3 w-3" />
+                    分享
+                  </button>
+                ) : null;
+              })()}
+              <button onClick={handleBatchDownload} className="inline-flex items-center gap-1.5 text-xs bg-zinc-700 hover:bg-zinc-600 dark:bg-zinc-600 dark:hover:bg-zinc-500 text-white px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
+                <Download className="h-3 w-3" />
+                下载
               </button>
-              <button
-                onClick={handleBatchDelete}
-                disabled={deleting}
-                className="btn btn-sm btn-danger"
-              >
-                <Trash2 />
-                {deleting ? "删除中..." : `删除 (${selectedKeys.size})`}
+              <button onClick={handleBatchDelete} disabled={deleting} className="inline-flex items-center gap-1.5 text-xs bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
+                <Trash2 className="h-3 w-3" />
+                删除
               </button>
             </>
           )}
