@@ -310,8 +310,8 @@ export default function Share({ loaderData }: Route.ComponentProps) {
             <thead className="text-xs text-zinc-500 border-b border-zinc-200 dark:border-zinc-800 sticky top-0 bg-zinc-50/95 dark:bg-zinc-900/95 backdrop-blur">
               <tr>
                 <th className="text-left py-2.5 px-6 font-medium uppercase tracking-wider">名称</th>
-                <th className="text-right py-2.5 px-6 font-medium uppercase tracking-wider w-28">大小</th>
-                <th className="text-right py-2.5 px-6 font-medium uppercase tracking-wider w-44">修改时间</th>
+                <th className="text-right py-2.5 px-6 font-medium uppercase tracking-wider w-28 hidden md:table-cell">大小</th>
+                <th className="text-right py-2.5 px-6 font-medium uppercase tracking-wider w-44 hidden md:table-cell">修改时间</th>
                 <th className="text-right py-2.5 px-6 font-medium uppercase tracking-wider w-20">操作</th>
               </tr>
             </thead>
@@ -337,10 +337,10 @@ export default function Share({ loaderData }: Route.ComponentProps) {
                       </span>
                     )}
                   </td>
-                  <td className="py-2 px-6 text-right text-zinc-500 tabular-nums">
+                  <td className="py-2 px-6 text-right text-zinc-500 tabular-nums hidden md:table-cell">
                     {obj.isDirectory ? "-" : formatBytes(obj.size)}
                   </td>
-                  <td className="py-2 px-6 text-right text-zinc-500 tabular-nums">
+                  <td className="py-2 px-6 text-right text-zinc-500 tabular-nums hidden md:table-cell">
                     {formatDate(obj.lastModified)}
                   </td>
                   <td className="py-1.5 px-6 text-right">
