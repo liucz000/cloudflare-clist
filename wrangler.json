@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "clist",
+  "main": "./workers/app.ts",
+  "compatibility_date": "2025-04-04",
+  "vars": {
+    "ADMIN_USERNAME": "admin",
+    "ADMIN_PASSWORD": "changeme",
+    "SITE_TITLE": "CList",
+    "WEBDAV_ENABLED": "true",
+    "WEBDAV_USERNAME": "webdav",
+    "WEBDAV_PASSWORD": "changeme"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "liu",
+      "database_id": "b0439ad2-6c3d-4f40-947c-9877b5edc912"
+    }
+  ]
+}
