@@ -3120,32 +3120,6 @@ function FileBrowser({ storage, isAdmin, isDark, chunkSizeMB }: { storage: Stora
               </>
             )}
           </div>
-          {/* Batch actions */}
-          {isAdmin && selectedKeys.size > 0 && (
-            <>
-              <button onClick={startBatchMove} disabled={batchMoving} className="inline-flex items-center gap-1.5 text-xs bg-zinc-700 hover:bg-zinc-600 dark:bg-zinc-600 dark:hover:bg-zinc-500 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
-                <ArrowRightLeft className="h-3 w-3" />
-                移动
-              </button>
-              {selectedKeys.size === 1 && (() => {
-                const obj = objects.find(o => selectedKeys.has(o.key));
-                return obj ? (
-                  <button onClick={() => startShare(obj)} className="inline-flex items-center gap-1.5 text-xs bg-zinc-700 hover:bg-zinc-600 dark:bg-zinc-600 dark:hover:bg-zinc-500 text-white px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
-                    <Share2 className="h-3 w-3" />
-                    分享
-                  </button>
-                ) : null;
-              })()}
-              <button onClick={handleBatchDownload} className="inline-flex items-center gap-1.5 text-xs bg-zinc-700 hover:bg-zinc-600 dark:bg-zinc-600 dark:hover:bg-zinc-500 text-white px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
-                <Download className="h-3 w-3" />
-                下载
-              </button>
-              <button onClick={handleBatchDelete} disabled={deleting} className="inline-flex items-center gap-1.5 text-xs bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
-                <Trash2 className="h-3 w-3" />
-                删除
-              </button>
-            </>
-          )}
           {path && (
             <button onClick={goUp} className="btn btn-sm btn-ghost" title="返回上级目录">
               <ArrowLeft />
@@ -3183,6 +3157,29 @@ function FileBrowser({ storage, isAdmin, isDark, chunkSizeMB }: { storage: Stora
           )}
         </div>
       </div>
+
+      {/* Batch action bar - separate row */}
+      {isAdmin && selectedKeys.size > 0 && (
+        <div className="flex items-center gap-1 px-3 md:px-4 py-2 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 overflow-x-auto">
+          <button onClick={startBatchMove} disabled={batchMoving} className="inline-flex items-center gap-1.5 text-xs bg-zinc-700 hover:bg-zinc-600 dark:bg-zinc-600 dark:hover:bg-zinc-500 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
+            <ArrowRightLeft className="h-3 w-3" />
+            移动
+          </button>
+          <button onClick={() => { if (selectedKeys.size === 1) { const obj = objects.find(o => selectedKeys.has(o.key)); if (obj) startShare(obj); } else { alert("分享功能仅支持单个文件"); } }} className="inline-flex items-center gap-1.5 text-xs bg-zinc-700 hover:bg-zinc-600 dark:bg-zinc-600 dark:hover:bg-zinc-500 text-white px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
+            <Share2 className="h-3 w-3" />
+            分享
+          </button>
+          <button onClick={handleBatchDownload} className="inline-flex items-center gap-1.5 text-xs bg-zinc-700 hover:bg-zinc-600 dark:bg-zinc-600 dark:hover:bg-zinc-500 text-white px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
+            <Download className="h-3 w-3" />
+            下载
+          </button>
+          <button onClick={handleBatchDelete} disabled={deleting} className="inline-flex items-center gap-1.5 text-xs bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
+            <Trash2 className="h-3 w-3" />
+            删除
+          </button>
+          <div className="flex-1" />
+        </div>
+      )}
 
       {/* New Folder Input */}
       {showNewFolderInput && (
