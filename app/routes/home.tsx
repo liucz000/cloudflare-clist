@@ -3456,7 +3456,10 @@ function FileBrowser({ storage, isAdmin, isDark, chunkSizeMB }: { storage: Stora
                   )}
                   {/* Preview area */}
                   <div
-                    onClick={() => (obj.isDirectory ? navigateTo(obj.key) : isPreviewable(obj.name) ? handlePreview(obj) : downloadFile(obj.key))}
+                    onClick={() => {
+                      if (selectedKeys.size > 0 && isAdmin) { toggleSelect(obj.key); return; }
+                      obj.isDirectory ? navigateTo(obj.key) : isPreviewable(obj.name) ? handlePreview(obj) : downloadFile(obj.key);
+                    }}
                     className="aspect-square flex items-center justify-center bg-zinc-50 dark:bg-zinc-800/50 overflow-hidden cursor-pointer"
                   >
                     {isImg ? (
@@ -3486,7 +3489,7 @@ function FileBrowser({ storage, isAdmin, isDark, chunkSizeMB }: { storage: Stora
                     )}
                   </div>
                   {/* File info */}
-                  <div className="px-2 py-1.5">
+                  <div className="px-2 py-1.5 cursor-pointer" onClick={() => { if (selectedKeys.size > 0 && isAdmin) toggleSelect(obj.key); }}>
                     <div className="truncate text-xs text-zinc-700 dark:text-zinc-200">{obj.name}</div>
                     <div className="truncate text-[10px] text-zinc-400">{obj.isDirectory ? "文件夹" : formatBytes(obj.size)}</div>
                   </div>
