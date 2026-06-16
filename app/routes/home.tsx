@@ -8,7 +8,7 @@ import { apiFileUrl } from "~/lib/api-path";
 import { marked } from "marked";
 import {
   X, Plus, Search, Sun, Moon, SlidersHorizontal, LogIn, LogOut, ShieldCheck, Cloud,
-  ChevronRight, ArrowLeft, ArrowRightLeft, RefreshCw, PanelLeft,
+  ChevronRight, ArrowLeft, ArrowRightLeft, RefreshCw, PanelLeft, Menu,
   FolderPlus, Upload, Download, Copy, Share2, Pencil, Trash2, Play, BarChart3, FileText,
   Folder, AlertCircle, Github, fileTypeIcon, Globe, LayoutGrid, List, Star, Calculator,
 } from "~/components/icons";
@@ -3960,12 +3960,20 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     <div className="h-screen overflow-hidden bg-zinc-100 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors flex flex-col">
       {/* Header */}
       <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shrink-0">
-        <div className="px-4 py-2.5 flex items-center justify-between gap-4">
+        <div className="px-3 md:px-4 py-2.5 flex items-center justify-between gap-2 md:gap-4">
           <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="md:hidden icon-btn h-9 w-9"
+              title="菜单"
+              aria-label="菜单"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-blue-600 text-white shadow-sm shadow-blue-600/20">
               <Cloud className="h-[18px] w-[18px]" />
             </span>
-            <span className="text-lg font-bold tracking-tight">CList</span>
+            <span className="text-lg font-bold tracking-tight hidden sm:inline">CList</span>
           </div>
           <div className="flex-1 text-center min-w-0">
             <span className="text-sm text-zinc-500 dark:text-zinc-400 truncate block">{siteTitle}</span>
@@ -4017,8 +4025,21 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       </header>
 
       <div className="flex flex-1 overflow-hidden relative">
+        {/* Mobile sidebar backdrop */}
+        {!sidebarCollapsed && (
+          <div
+            className="md:hidden fixed inset-0 bg-black/40 z-30"
+            onClick={() => setSidebarCollapsed(true)}
+          />
+        )}
+
         {/* Sidebar */}
-        <aside className={`${sidebarCollapsed ? "w-0" : "w-64"} border-r border-zinc-200 dark:border-zinc-800 shrink-0 bg-white dark:bg-zinc-900/50 flex flex-col transition-all duration-300 overflow-hidden relative`}>
+        <aside className={`
+          ${sidebarCollapsed ? "w-0 max-md:-translate-x-full" : "w-64 max-md:translate-x-0"}
+          border-r border-zinc-200 dark:border-zinc-800 shrink-0 bg-white dark:bg-zinc-900/95 backdrop-blur-sm flex flex-col
+          transition-all duration-300 ease-in-out overflow-hidden relative
+          max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:z-40 max-md:shadow-xl
+        `}>
           <div className="p-3 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between shrink-0">
             <span className="text-xs text-zinc-500 font-medium uppercase tracking-wider whitespace-nowrap">存储列表</span>
             <div className="flex items-center gap-1">
@@ -4056,7 +4077,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                       ? "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300"
                       : "hover:bg-zinc-100 dark:hover:bg-zinc-800/60"
                   }`}
-                  onClick={() => setSelectedStorage(s)}
+                  onClick={() => { setSelectedStorage(s); if (window.innerWidth < 768) setSidebarCollapsed(true); }}
                   onTouchStart={() => setSelectedStorage(s)}
                 >
                   <div className="min-w-0 flex-1">
@@ -4070,7 +4091,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                   </div>
                   {isAdmin && (
                     <div 
-                        className="flex items-center gap-0.5"
+                        className="flex items-center gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
                         onClick={(e) => e.stopPropagation()}
                      >
                       <button
@@ -4105,11 +4126,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           </div>
         </aside>
 
-        {/* Sidebar Expand Button - only show when collapsed */}
+        {/* Sidebar Expand Button - only show when collapsed on desktop */}
         {sidebarCollapsed && (
           <button
             onClick={() => setSidebarCollapsed(false)}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 grid h-10 w-5 place-items-center rounded-r-md bg-white dark:bg-zinc-800 border border-l-0 border-zinc-200 dark:border-zinc-700 text-zinc-500 shadow-sm hover:text-blue-500 transition-colors"
+            className="hidden md:grid absolute left-0 top-1/2 -translate-y-1/2 z-10 h-10 w-5 place-items-center rounded-r-md bg-white dark:bg-zinc-800 border border-l-0 border-zinc-200 dark:border-zinc-700 text-zinc-500 shadow-sm hover:text-blue-500 transition-colors"
             title="展开侧边栏"
             aria-label="展开侧边栏"
           >
