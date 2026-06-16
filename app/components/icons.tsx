@@ -146,6 +146,18 @@ const FileOutline = (p: IconProps) => (
 export const FileText = (p: IconProps) => (
   <Svg {...p}><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></Svg>
 );
+export const FilePdf = (p: IconProps) => (
+  <Svg {...p}><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><text x="8" y="17" fontSize="7" fontWeight="bold" fill="currentColor" stroke="none" fontFamily="sans-serif">PDF</text></Svg>
+);
+export const FileDoc = (p: IconProps) => (
+  <Svg {...p}><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><text x="8" y="17" fontSize="6.5" fontWeight="bold" fill="currentColor" stroke="none" fontFamily="sans-serif">W</text></Svg>
+);
+export const FileXls = (p: IconProps) => (
+  <Svg {...p}><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><text x="8" y="17" fontSize="6.5" fontWeight="bold" fill="currentColor" stroke="none" fontFamily="sans-serif">X</text></Svg>
+);
+export const FilePpt = (p: IconProps) => (
+  <Svg {...p}><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><text x="8" y="17" fontSize="6.5" fontWeight="bold" fill="currentColor" stroke="none" fontFamily="sans-serif">P</text></Svg>
+);
 export const FileCode = (p: IconProps) => (
   <Svg {...p}><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="m10 12-2 2 2 2" /><path d="m14 16 2-2-2-2" /></Svg>
 );
@@ -189,24 +201,35 @@ export const Github = (p: IconProps) => (
 /* ---------- 文件类型 → 图标映射，供表格使用 ---------- */
 export function fileTypeIcon(type: FileType) {
   switch (type) {
-    case "image":
-      return FileImage;
-    case "video":
-      return FileVideo;
-    case "audio":
-      return FileAudio;
+    case "image": return FileImage;
+    case "video": return FileVideo;
+    case "audio": return FileAudio;
+    case "code": return FileCode;
+    case "markdown": return FileCode;
+    case "pdf": return FilePdf;
+    case "text": return FileText;
+    case "docx": return FileDoc;
+    case "xlsx": return FileXls;
+    case "pptx": return FilePpt;
+    case "archive": return FileArchive;
+    default: return FileText;
+  }
+}
+
+/* ---------- 文件类型 → 颜色 class ---------- */
+export function fileTypeColor(type: FileType): string {
+  switch (type) {
+    case "image": return "text-pink-500 dark:text-pink-400";
+    case "video": return "text-purple-500 dark:text-purple-400";
+    case "audio": return "text-emerald-500 dark:text-emerald-400";
     case "code":
-    case "markdown":
-      return FileCode;
-    case "pdf":
-    case "text":
-    case "docx":
-    case "xlsx":
-    case "pptx":
-      return FileText;
-    case "archive":
-      return FileArchive;
-    default:
-      return FileText;
+    case "markdown": return "text-amber-500 dark:text-amber-400";
+    case "pdf": return "text-red-500 dark:text-red-400";
+    case "docx": return "text-blue-500 dark:text-blue-400";
+    case "xlsx": return "text-green-500 dark:text-green-400";
+    case "pptx": return "text-orange-500 dark:text-orange-400";
+    case "archive": return "text-yellow-600 dark:text-yellow-400";
+    case "text": return "text-zinc-500 dark:text-zinc-400";
+    default: return "text-zinc-400 dark:text-zinc-500";
   }
 }

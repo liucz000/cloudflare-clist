@@ -13,7 +13,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 import { useState, useEffect } from "react";
 import { FilePreview } from "~/components/FilePreview";
-import { Folder, Download, Link as LinkIcon, Clock, AlertCircle, ChevronRight, Play, Lock, fileTypeIcon } from "~/components/icons";
+import { Folder, Download, Link as LinkIcon, Clock, AlertCircle, ChevronRight, Play, Lock, fileTypeIcon, fileTypeColor } from "~/components/icons";
 import { getFileType } from "~/lib/file-utils";
 import { apiFileUrl } from "~/lib/api-path";
 
@@ -56,8 +56,10 @@ function formatDate(dateStr: string): string {
 }
 
 function getFileIcon(name: string) {
-  const Icon = fileTypeIcon(getFileType(name));
-  return <Icon className="h-4 w-4 shrink-0" />;
+  const type = getFileType(name);
+  const Icon = fileTypeIcon(type);
+  const color = fileTypeColor(type);
+  return <Icon className={`h-4 w-4 shrink-0 ${color}`} />;
 }
 
 export default function Share({ loaderData }: Route.ComponentProps) {
@@ -332,7 +334,7 @@ export default function Share({ loaderData }: Route.ComponentProps) {
                       </button>
                     ) : (
                       <span className="flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
-                        <span className="text-zinc-400 dark:text-zinc-500">{getFileIcon(obj.name)}</span>
+                        {getFileIcon(obj.name)}
                         <span className="truncate">{obj.name}</span>
                       </span>
                     )}

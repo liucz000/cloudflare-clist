@@ -10,7 +10,7 @@ import {
   X, Plus, Search, Sun, Moon, SlidersHorizontal, LogIn, LogOut, ShieldCheck, Cloud,
   ChevronRight, ArrowLeft, ArrowRightLeft, RefreshCw, PanelLeft, Menu,
   FolderPlus, Upload, Download, Copy, Share2, Pencil, Trash2, Play, BarChart3, FileText,
-  Folder, AlertCircle, Github, fileTypeIcon, Globe, LayoutGrid, List, Star, Calculator,
+  Folder, AlertCircle, Github, fileTypeIcon, fileTypeColor, Globe, LayoutGrid, List, Star, Calculator,
 } from "~/components/icons";
 
 export function meta({ data }: Route.MetaArgs) {
@@ -3041,8 +3041,10 @@ function FileBrowser({ storage, isAdmin, isDark, chunkSizeMB }: { storage: Stora
 
   // Get file icon based on type
   const getFileIcon = (fileName: string, className = "h-4 w-4 shrink-0") => {
-    const Icon = fileTypeIcon(getFileType(fileName));
-    return <Icon className={className} />;
+    const type = getFileType(fileName);
+    const Icon = fileTypeIcon(type);
+    const color = fileTypeColor(type);
+    return <Icon className={`${className} ${color}`} />;
   };
 
   return (
@@ -3398,7 +3400,7 @@ function FileBrowser({ storage, isAdmin, isDark, chunkSizeMB }: { storage: Stora
                     onClick={() => { setGlobalSearch(false); setSearchQuery(""); navigateTo(parent); }}
                     className="flex items-center gap-2 w-full px-4 py-2 text-left hover:bg-zinc-100 dark:hover:bg-zinc-800/40"
                   >
-                    {obj.isDirectory ? <Folder className="h-4 w-4 shrink-0 text-blue-500" /> : <span className="text-zinc-400">{getFileIcon(obj.name)}</span>}
+                    {obj.isDirectory ? <Folder className="h-4 w-4 shrink-0 text-blue-500" /> : getFileIcon(obj.name)}
                     <span className="truncate font-medium text-zinc-700 dark:text-zinc-200">{obj.name}</span>
                     {parent && <span className="truncate text-xs text-zinc-400 ml-auto">/{parent}</span>}
                   </button>
@@ -3425,7 +3427,9 @@ function FileBrowser({ storage, isAdmin, isDark, chunkSizeMB }: { storage: Stora
           <div className="p-3 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {visibleObjects.map((obj, i) => {
               const isImg = !obj.isDirectory && getFileType(obj.name) === "image";
-              const Ic = obj.isDirectory ? null : fileTypeIcon(getFileType(obj.name));
+              const fileType = obj.isDirectory ? null : getFileType(obj.name);
+              const Ic = fileType ? fileTypeIcon(fileType) : null;
+              const colorCls = fileType ? fileTypeColor(fileType) : "";
               return (
                 <div
                   key={obj.key}
@@ -3467,7 +3471,7 @@ function FileBrowser({ storage, isAdmin, isDark, chunkSizeMB }: { storage: Stora
                     ) : obj.isDirectory ? (
                       <Folder className="h-10 w-10 text-blue-500" />
                     ) : Ic ? (
-                      <Ic className="h-10 w-10 text-zinc-400" />
+                      <Ic className={`h-10 w-10 ${colorCls}`} />
                     ) : null}
                   </div>
                   {/* Action buttons overlay - always visible on mobile, hover on desktop */}
@@ -3564,7 +3568,7 @@ function FileBrowser({ storage, isAdmin, isDark, chunkSizeMB }: { storage: Stora
                       </button>
                     ) : (
                       <span className="flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
-                        <span className="text-zinc-400 dark:text-zinc-500">{getFileIcon(obj.name)}</span>
+                        {getFileIcon(obj.name)}
                         <span className="truncate">{obj.name}</span>
                       </span>
                     )}
