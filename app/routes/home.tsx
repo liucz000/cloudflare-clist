@@ -3434,7 +3434,7 @@ function FileBrowser({ storage, isAdmin, isDark, chunkSizeMB }: { storage: Stora
                 >
                   {/* Checkbox for batch selection */}
                   {isAdmin && (
-                    <div className="absolute top-1.5 left-1.5 z-10 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
+                    <div className="absolute top-1.5 left-1.5 z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
                       <input
                         type="checkbox"
                         checked={selectedKeys.has(obj.key)}
@@ -3443,7 +3443,7 @@ function FileBrowser({ storage, isAdmin, isDark, chunkSizeMB }: { storage: Stora
                       />
                     </div>
                   )}
-                  {/* Show checkbox when selected */}
+                  {/* Show checkbox when selected (desktop) */}
                   {isAdmin && selectedKeys.has(obj.key) && (
                     <div className="absolute top-1.5 left-1.5 z-10" onClick={(e) => e.stopPropagation()}>
                       <input
@@ -3467,8 +3467,8 @@ function FileBrowser({ storage, isAdmin, isDark, chunkSizeMB }: { storage: Stora
                       <Ic className="h-10 w-10 text-zinc-400" />
                     ) : null}
                   </div>
-                  {/* Action buttons overlay */}
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent pt-6 pb-1.5 px-1.5 flex items-center justify-end gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {/* Action buttons overlay - always visible on mobile, hover on desktop */}
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent pt-6 pb-1.5 px-1.5 flex items-center justify-end gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                     {!obj.isDirectory && canDownload && (
                       <button onClick={(e) => { e.stopPropagation(); downloadFile(obj.key); }} className="icon-btn h-7 w-7 text-white hover:text-white hover:bg-white/20" title="下载" aria-label="下载"><Download className="h-3.5 w-3.5" /></button>
                     )}
