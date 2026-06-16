@@ -3429,10 +3429,36 @@ function FileBrowser({ storage, isAdmin, isDark, chunkSizeMB }: { storage: Stora
               return (
                 <div
                   key={obj.key}
-                  onClick={() => (obj.isDirectory ? navigateTo(obj.key) : isPreviewable(obj.name) ? handlePreview(obj) : downloadFile(obj.key))}
-                  className={`group relative cursor-pointer rounded-lg border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-sm transition ${selectedKeys.has(obj.key) ? "ring-2 ring-blue-500" : ""} ${cursor === i ? "ring-2 ring-blue-500" : ""}`}
+                  className={`group relative rounded-lg border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-sm transition ${selectedKeys.has(obj.key) ? "ring-2 ring-blue-500" : ""} ${cursor === i ? "ring-2 ring-blue-500" : ""}`}
+                  onContextMenu={(e) => { e.preventDefault(); setContextMenu({ x: e.clientX, y: e.clientY, obj }); }}
                 >
-                  <div className="aspect-square flex items-center justify-center bg-zinc-50 dark:bg-zinc-800/50 overflow-hidden">
+                  {/* Checkbox for batch selection */}
+                  {isAdmin && (
+                    <div className="absolute top-1.5 left-1.5 z-10 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
+                      <input
+                        type="checkbox"
+                        checked={selectedKeys.has(obj.key)}
+                        onChange={() => toggleSelect(obj.key)}
+                        className="h-4 w-4 rounded border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 accent-blue-600 cursor-pointer"
+                      />
+                    </div>
+                  )}
+                  {/* Show checkbox when selected */}
+                  {isAdmin && selectedKeys.has(obj.key) && (
+                    <div className="absolute top-1.5 left-1.5 z-10" onClick={(e) => e.stopPropagation()}>
+                      <input
+                        type="checkbox"
+                        checked={true}
+                        onChange={() => toggleSelect(obj.key)}
+                        className="h-4 w-4 rounded border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 accent-blue-600 cursor-pointer"
+                      />
+                    </div>
+                  )}
+                  {/* Preview area */}
+                  <div
+                    onClick={() => (obj.isDirectory ? navigateTo(obj.key) : isPreviewable(obj.name) ? handlePreview(obj) : downloadFile(obj.key))}
+                    className="aspect-square flex items-center justify-center bg-zinc-50 dark:bg-zinc-800/50 overflow-hidden cursor-pointer"
+                  >
                     {isImg ? (
                       <img src={apiFileUrl(storage.id, obj.key)} alt={obj.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition" />
                     ) : obj.isDirectory ? (
@@ -3441,6 +3467,25 @@ function FileBrowser({ storage, isAdmin, isDark, chunkSizeMB }: { storage: Stora
                       <Ic className="h-10 w-10 text-zinc-400" />
                     ) : null}
                   </div>
+                  {/* Action buttons overlay */}
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent pt-6 pb-1.5 px-1.5 flex items-center justify-end gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {!obj.isDirectory && canDownload && (
+                      <button onClick={(e) => { e.stopPropagation(); downloadFile(obj.key); }} className="icon-btn h-7 w-7 text-white hover:text-white hover:bg-white/20" title="下载" aria-label="下载"><Download className="h-3.5 w-3.5" /></button>
+                    )}
+                    {!obj.isDirectory && isPreviewable(obj.name) && (
+                      <button onClick={(e) => { e.stopPropagation(); handlePreview(obj); }} className="icon-btn h-7 w-7 text-white hover:text-white hover:bg-white/20" title="预览" aria-label="预览"><Play className="h-3.5 w-3.5" /></button>
+                    )}
+                    <button onClick={(e) => { e.stopPropagation(); toggleFavorite(obj); }} className={`icon-btn h-7 w-7 text-white hover:text-white hover:bg-white/20 ${isFavorite(obj.key) ? "!text-yellow-400" : ""}`} title={isFavorite(obj.key) ? "取消收藏" : "收藏"} aria-label="收藏"><Star className="h-3.5 w-3.5" /></button>
+                    {isAdmin && (
+                      <>
+                        <button onClick={(e) => { e.stopPropagation(); startShare(obj); }} className="icon-btn h-7 w-7 text-white hover:text-white hover:bg-white/20" title="分享" aria-label="分享"><Share2 className="h-3.5 w-3.5" /></button>
+                        <button onClick={(e) => { e.stopPropagation(); startRename(obj); }} className="icon-btn h-7 w-7 text-white hover:text-white hover:bg-white/20" title="重命名" aria-label="重命名"><Pencil className="h-3.5 w-3.5" /></button>
+                        <button onClick={(e) => { e.stopPropagation(); startMove(obj); }} className="icon-btn h-7 w-7 text-white hover:text-white hover:bg-white/20" title="移动" aria-label="移动"><ArrowRightLeft className="h-3.5 w-3.5" /></button>
+                        <button onClick={(e) => { e.stopPropagation(); obj.isDirectory ? deleteFolder(obj.key, obj.name) : deleteFile(obj.key); }} className="icon-btn h-7 w-7 text-white hover:text-red-400 hover:bg-white/20" title="删除" aria-label="删除"><Trash2 className="h-3.5 w-3.5" /></button>
+                      </>
+                    )}
+                  </div>
+                  {/* File info */}
                   <div className="px-2 py-1.5">
                     <div className="truncate text-xs text-zinc-700 dark:text-zinc-200">{obj.name}</div>
                     <div className="truncate text-[10px] text-zinc-400">{obj.isDirectory ? "文件夹" : formatBytes(obj.size)}</div>
